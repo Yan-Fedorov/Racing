@@ -9,21 +9,28 @@ namespace Racing
 {
     public class Figure
     {
+        private readonly Logic _logic;
+        public Figure()
+        {
+            _logic = new Logic();
+        }
         public char[,] figure = new char[,]
         {
             //new char[]{'@', '@', '@'},
             //new char[]{' ', '@', ' '}
+            {'@', '@'},
             {'@', ' '},
             {'@', '@'},
+            {'@', ' '},
             {'@', ' '}
         };
-      
+
 
         public int Y;
         public int X;
 
 
-        public void CopyTo(char[,] gameGround, int targetX, int targetY)
+        public void RenderTo(char[,] gameGround, int targetX, int targetY)
         {
             var xLength = gameGround.GetLength(0);
             var yLength = gameGround.GetLength(1);
@@ -34,30 +41,46 @@ namespace Racing
             var windowLength = Math.Min(xLength, figure.GetLength(0) + targetX) - targetX;
             var windowHeight = Math.Min(yLength, figure.GetLength(1) + targetY) - targetY;
 
+            /* */
             for (var x = 0; x < windowLength; x++)
                 for (var y = 0; y < windowHeight; y++)
+                {
+                    int dextX = x + targetX;
+                    int destY = y + targetY;
+
+                    if (figure[x, y] == ' ' || dextX < 0 || destY < 0)
+                        continue;
+
+                    gameGround[dextX, destY] = figure[x, y];
+                }
+            // */
+             /* /
+            for (var x = 0; x < windowLength; x++)
+            {
+                for (var y = 0; y < windowHeight; y++)
+                {
                     if (figure[x, y] != ' ')
                     {
                         if (targetX < 0 )
                         {
-                            var newX =x + (0 - targetX);
-                            if(newX >= windowLength)
+                            var newX = x + (0 - targetX);
+                            if (newX >= windowLength)
                             {
                                 return;
                             }
-                            
-                            gameGround[x , y ] = figure[newX, y];
-                        } 
-                        else if (targetY < 0)
+
+                            gameGround[x, y] = figure[newX, y];
+                        }
+                        else if (targetY < 0 )
                         {
                             var newY = y + (0 - targetY);
                             if (newY >= windowHeight)
                             {
                                 return;
                             }
-                            gameGround[x , y ] = figure[x, newY];
+                            gameGround[x, y] = figure[x, newY];
                         }
-                        else if(targetX<0 && targetY < 0)
+                        else if (targetX < 0 && targetY < 0)
                         {
                             var newY = y + (0 - targetY);
                             var newX = x + (0 - targetX);
@@ -65,11 +88,21 @@ namespace Racing
                             {
                                 return;
                             }
-                            gameGround[x , y ] = figure[newX, newY];
+                            gameGround[x, y] = figure[newX, newY];
                         }
                         else
-                        gameGround[x + targetX, y + targetY] = figure[x, y];
+                            gameGround[x + targetX, y + targetY] = figure[x, y];
                     }
+                    if (y == 17)
+                    {
+                        if (gameGround[x, y] != '@')
+                        {
+                            gameGround[x, y] = _logic.car[x];
+                        }
+                    }
+                }
+            }
+            // */
         }
 
         public static string ToString(char[,] mas)
@@ -89,10 +122,12 @@ namespace Racing
 
     public class Logic
     {
+        private readonly Figure _fig;
         public Logic()
         {
             c = 6;
             car[c] = '^';
+            //_fig = new Figure();
         }
         //падающие фигурки
         int c = 6;
@@ -100,17 +135,17 @@ namespace Racing
         Random random = new Random();
         int randNum = 0;
         int randPos = 0;
-        
+
         char[,] gameGround = new char[12, 18];
         public ConsoleKeyInfo key_info = new ConsoleKeyInfo();
-        public Thread backgroundGame = new Thread(Backgroud);
+        public Thread backgroundGame;
         public bool fix = true;
         int dropTime = 600;
         public bool gameOver = false;
 
 
         //машинка
-        char[] car = new char[12];
+        public char[] car = new char[12];
 
 
         public void leftArrowEvent()
@@ -120,7 +155,7 @@ namespace Racing
                 car[c] = ' ';
                 c--;
                 car[c] = '^';
-                DrowCar();
+                //DrowCar();
 
             }
         }
@@ -131,7 +166,7 @@ namespace Racing
                 car[c] = ' ';
                 c++;
                 car[c] = '^';
-                DrowCar();
+                //DrowCar();
 
             }
         }
@@ -168,7 +203,7 @@ namespace Racing
                      {'@', ' '},
                      {'@', '@'},
                      {'@', ' ' }
-                };                
+                };
             }
             else if (randNum == 2)
             {
@@ -178,7 +213,7 @@ namespace Racing
                   {'@'},
                   {'@'},
                   {'@'}
-              };                
+              };
             }
             else if (randNum == 3)
             {
@@ -186,9 +221,9 @@ namespace Racing
                {
                    {'@', '@'},
                    {'@', '@'}
-               };                
+               };
             }
-            return f;            
+            return f;
         }
         public void DrowFig(char[,] gameField = null)
         {
@@ -201,10 +236,10 @@ namespace Racing
                 for (int x = 0; x < 12; x++)
                 {
                     Console.Write(gameField[x, y]);
-                    if( y == 17)
-                    {
-                        Console.Write(car[x]);
-                    }
+                    //if( y == 17)
+                    //{
+                    //    Console.Write(car[x]);
+                    //}
                     //mas[,] = gameGround[x, y]
                 }
             }
@@ -215,14 +250,17 @@ namespace Racing
             for (var y = 0; y < 18; y++)
             {
                 var field = new char[12, 18];
-                figure.CopyTo(field, randPosition, y);
+                figure.RenderTo(field, randPosition, y);
                 logic.DrowFig(field);
+                GameOver(randFig, randPosition, field);
+                if (gameOver)
+                    break;
 
-                GameOver(randFig, y, randPos);
+                DrowCar();
 
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(100);
             }
-            
+
         }
         public void FullClean()
         {
@@ -246,7 +284,7 @@ namespace Racing
         }
         public void MoveCar()
         {
-            DrowCar();
+
             while (!gameOver)
             {
                 key_info = Console.ReadKey(true);
@@ -256,13 +294,14 @@ namespace Racing
 
         }
 
-        public void GameOver(int randFig, int y, int randPos)
+        public void GameOver(int randFig, int randPos, char[,] field)
         {
             for (int x = 0; x < 12; x++)
             {
-                if (gameGround[x, 17] == '@' && c == x)
+                if (field[x, 16] == '@' && car[x] == '^')
                 {
                     gameOver = true;
+                    break;
                 }
                 else
                 {
@@ -317,32 +356,29 @@ namespace Racing
 
             //return gameOver;
         }
-        public static void Backgroud()
+        public void Backgroud()
         {
 
-            Logic logic = new Logic();
+            //Logic logic = new Logic();
             Figure figure = new Figure();
             Console.Clear();
             var i = 0;
-            logic.BuildCanvas();
+            BuildCanvas();
             do
             {
                 Console.WriteLine(i);
 
-                var randFig = logic.SelectFigure();
-                var randPos = logic.SelectPosition();
-                figure = logic.buildFigure(randFig);
+                var randFig = SelectFigure();
+                var randPos = SelectPosition();
+                figure = buildFigure(randFig);
                 //logic.FullClean();
 
-                logic.FallFig(figure, logic, randPos, randFig);
+                FallFig(figure, this, randPos, randFig);
                 i++;
 
-            } while (!logic.gameOver);
+            } while (!gameOver);
             //Console.ReadLine();
         }
-
-
-
     }
 }
 
