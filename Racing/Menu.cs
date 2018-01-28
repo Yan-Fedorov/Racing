@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Racing.Figure;
 
 namespace Racing
 {
     class Menu
     {
         private readonly Logic _logic;
-        private readonly Figure _figure;
+        private readonly OopFigure _figure;
 
-        public Menu(Logic logic, Figure figure)
+        public Menu(Logic logic, OopFigure figure)
         {
             _logic = logic;
             _figure = figure;
