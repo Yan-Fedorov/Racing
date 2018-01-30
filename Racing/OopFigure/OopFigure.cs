@@ -16,23 +16,26 @@ namespace Racing.Figure
         {
         }
 
-        protected char[,] figure = new char[,]
-        {
-            {'@', '@'},
-            {'@', ' '},
-            {'@', '@'},
-            {'@', ' '},
-            {'@', ' '}
-        };
+        /*protected*/
+        public char[,] figure = new char[,]
+{
+             
+                     {'@', ' '},
+                     {'@', '@'},
+                     {'@', ' ' }
+                    
+    };
 
         public static OopFigure buildFigure()
         {
             Random random = new Random();
             int RandNum = random.Next(1, 4); ;
 
-            int randPos = random.Next(2, 10);
+            var f = new OopFigure
+            {
+                X = random.Next(2, 10)
+            };
 
-            var f = new OopFigure();
             if (RandNum == 1)
             {
                 f.figure = new char[,]
@@ -62,6 +65,7 @@ namespace Racing.Figure
             }
             return f;
         }
+
         public void RenderTo(char[,] gameGround)
         {
             var xLength = gameGround.GetLength(0);

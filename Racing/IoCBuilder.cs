@@ -22,6 +22,9 @@ namespace Racing
 
             builder.RegisterType<Logic>().AsSelf().SingleInstance();
 
+            builder.RegisterType<Fall_Drow>().AsSelf().SingleInstance();
+
+
             return builder.Build();
         }
     }

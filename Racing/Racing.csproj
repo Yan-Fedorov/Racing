@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fall_Drow.cs" />
     <Compile Include="IoCBuilder.cs" />
     <Compile Include="OopFigure\Car\Car.cs" />
     <Compile Include="Logic.cs" />

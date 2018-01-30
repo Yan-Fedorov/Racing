@@ -13,13 +13,27 @@
                 {' ',' ','^',' '},
                 {'^','^','^','^'},
                 {' ',' ','^',' '},
-                {' ',' ','^',' '},               
+                {' ',' ','^',' '},
             };
         }
 
         public bool TestCollision(char[,] gameField)
         {
-            return !(gameField[X, Y] == ' ' || gameField[X, Y] == '\0');
+            for (int x = 0; x < figure.GetLength(0); x++)
+            {
+                for (int y = 0; y < figure.GetLength(1); y++)
+                {
+                    if (
+                        gameField[X + x, Y + y] != ' ' && gameField[X + x, Y + y] != '\0'
+                        && figure[x, y] != ' '
+                        )
+                        return true;
+                }
+            }
+
+            return false;
+
         }
     }
 }
+
