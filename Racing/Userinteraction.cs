@@ -12,13 +12,15 @@ namespace Racing
     {
         private readonly OopCar _car;
         private readonly Logic _logic;
+        private readonly Shell _shell;
 
         public ConsoleKeyInfo key_info = new ConsoleKeyInfo();
 
-        public Userinteraction(OopCar car, Logic logic)
+        public Userinteraction(OopCar car, Logic logic, Shell shell)
         {
             _car = car;
             _logic = logic;
+            _shell = shell;
         }
         
         public void leftArrowEvent()
@@ -30,11 +32,20 @@ namespace Racing
         }
         public void rightArrowEvent()
         {
-            if (_car.X != 17)
+            if (_car.X != 12)
             {
                 _car.X++;
 
             }
+        }
+        public void upArrowEvent()
+        {
+            if (_shell.Shells > 0)
+            {
+                _logic.ShellFly = true;
+                _shell.Shells--;
+            }
+            
         }
         public void MoveCar()
         {
@@ -43,6 +54,7 @@ namespace Racing
                 key_info = Console.ReadKey(true);
                 if (key_info.Key == ConsoleKey.RightArrow) rightArrowEvent();
                 else if (key_info.Key == ConsoleKey.LeftArrow) leftArrowEvent();
+                else if (key_info.Key == ConsoleKey.UpArrow) upArrowEvent();
             }
 
         }

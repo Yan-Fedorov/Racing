@@ -12,11 +12,8 @@ namespace Racing
         public List<OopFigure> figuresList = new List<OopFigure>();
 
         OopFigure f = new OopFigure();
-        OopFigure a = new OopFigure();
-        OopFigure b = new OopFigure();
-        OopFigure c = new OopFigure();
 
-
+        int FallCount = 5;
         public Fall_Drow()
         {
 
@@ -26,57 +23,44 @@ namespace Racing
                      {'@', '@'},
                      {'@', ' ' }
                     };
-            figuresList.Add(f);
-            figuresList.Add(a);
-            figuresList.Add(b);
-            figuresList.Add(c);
-        }
 
+
+        }
         public void Fall()
         {
-            //for(int i = 0; i< figuresList.Capacity; i++)
-            //{
-            //    figuresList[i].Y++;
-            //    if (figuresList[i].Y >= 4)
-            //    {
-            //        figuresList[i+1].Y++;
-            //    }
-            //    if (figuresList[i].Y >= 17)
-            //        figuresList[i] = OopFigure.buildFigure();
-            //}
-            f.Y++;
-            if (f.Y >= 4)
+            //можно изменить метод фоолл, передавая туда в качестве параметром указания что нужно будет сделать с данной фигурой(вврех - вниз и на сколько)+ передевать фигуру опционально
+
+            FallCount++;
+
+            if (FallCount == 6)
             {
-
+                figuresList.Add(OopFigure.buildFigure());
+                FallCount = 0;
             }
-            if (f.Y >= 17)
-                f = OopFigure.buildFigure();
 
+            for (int i = 0; i < figuresList.Count; i++)
+            {
+                figuresList[i].Y++;
+            }
 
+            figuresList = figuresList
+                .Where(x => x.Y < 17)
+                .ToList();
 
+            // через каждый 4 хода падает новая фигура да
+            // фигуры которые вышли за границы - удалять из списка --
 
-            //foreach (OopFigure fig in figuresList)
-            //            {
-            //                fig.Y++;
-            //                if (fig.Y == 17)
-            //                {
-            //                    fig = OopFigure.buildFigure();
-            //                }
-            //            }
-
-            // через каждый 4 хода падает новая фигура
-            // фигуры которые вышли за границы - удалять из списка
-
-            // добавить ускорение фигур
+            // добавить ускорение фигур - есть
             // добавить стрелялки( добавление бонусных штук) при попадении на которых будет добавлятся снаряд
             // счет 
         }
 
         public void DrowTo(char[,] field)
         {
-            f.RenderTo(field);
-            //foreach (OopFigure fig in figuresList)
-            //    fig.RenderTo(field);
+            for (int i = 0; i < figuresList.Count; i++)
+            {
+                figuresList[i].RenderTo(field);
+            }
         }
     }
 }

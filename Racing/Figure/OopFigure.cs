@@ -11,29 +11,32 @@ namespace Racing.Figure
     {
         public int X;
         public int Y;
-
+      
         public OopFigure()
         {
+           
         }
 
+        
         /*protected*/
         public char[,] figure = new char[,]
-{
+        {
              
-                     {'@', ' '},
-                     {'@', '@'},
-                     {'@', ' ' }
-                    
-    };
+                     //{'@', ' '},
+                     //{'@', '@'},
+                     //{'@', ' ' }
+                     {'$'},
+
+        };
 
         public static OopFigure buildFigure()
         {
             Random random = new Random();
-            int RandNum = random.Next(1, 4); ;
+            int RandNum = random.Next(1, 5); ;
 
             var f = new OopFigure
             {
-                X = random.Next(2, 10)
+                X = random.Next(0, 10)
             };
 
             if (RandNum == 1)
@@ -63,6 +66,13 @@ namespace Racing.Figure
                    {'@', '@'}
                };
             }
+            else if (RandNum == 4)
+            {
+                f.figure = new char[,]
+               {
+                   {'$'},  
+               };
+            }
             return f;
         }
 
@@ -86,7 +96,7 @@ namespace Racing.Figure
 
                     if (figure[x, y] == ' ' || dextX < 0 || destY < 0)
                         continue;
-
+                    
                     gameGround[dextX, destY] = figure[x, y];
                 }
 

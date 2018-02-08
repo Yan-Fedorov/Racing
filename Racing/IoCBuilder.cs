@@ -17,12 +17,15 @@ namespace Racing
             var builder = new ContainerBuilder();
 
             builder.RegisterType<OopCar>().AsSelf().SingleInstance();
+            builder.RegisterType<Shell>().AsSelf().SingleInstance();
 
             builder.RegisterType<Userinteraction>().AsSelf().SingleInstance();
 
             builder.RegisterType<Logic>().AsSelf().SingleInstance();
 
             builder.RegisterType<Fall_Drow>().AsSelf().SingleInstance();
+
+            
 
 
             return builder.Build();
