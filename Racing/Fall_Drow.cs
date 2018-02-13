@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Racing.Figure;
 
 namespace Racing
@@ -11,21 +8,8 @@ namespace Racing
     {
         public List<OopFigure> figuresList = new List<OopFigure>();
 
-        OopFigure f = new OopFigure();
-
         int FallCount = 5;
-        public Fall_Drow()
-        {
 
-            f.figure = new char[,]
-                    {
-                     {'@', ' '},
-                     {'@', '@'},
-                     {'@', ' ' }
-                    };
-
-
-        }
         public void Fall()
         {
             //можно изменить метод фоолл, передавая туда в качестве параметром указания что нужно будет сделать с данной фигурой(вврех - вниз и на сколько)+ передевать фигуру опционально

@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
-using Racing.Figure.Car;
 
 
 namespace Racing
 {
     class Program
-    {       
+    {
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
             using (var container = IoCBuilder.Building())
             {
-                
+
                 using (var scope = container.BeginLifetimeScope())
                 {
-                  
+
                     var logica = scope.TryResolve<Logic>(out var a);
-                
+
                     var userInt = scope.TryResolve<Userinteraction>(out var b);
 
                     a.backgroundGame = new Thread(a.Backgroud);
@@ -31,7 +26,7 @@ namespace Racing
 
                     b.MoveCar();
                     Console.ReadLine();
-                   
+
                 }
 
             }

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using Racing.Figure.Car;
 using Racing.Figure;
-using Autofac;
 
 namespace Racing
 {
@@ -15,23 +10,26 @@ namespace Racing
         private readonly OopCar _car;
         private readonly Fall_Drow _figures;
         private readonly Shell _shell;
+        private readonly ShellEvents _shellEvents;
 
-        public Logic(OopCar car, Fall_Drow figures, Shell shell)
+        public Logic(OopCar car, Fall_Drow figures, Shell shell, ShellEvents shellEvents)
         {
             _car = car;
             _figures = figures;
             _shell = shell;
+            _shellEvents = shellEvents;
         }
 
         public Thread backgroundGame;
 
-        
+
         static int I = 0;
         static TimerCallback tm = new TimerCallback(Increase);
         public Timer timer = new Timer(tm, null, 0, 3000);
 
         public bool ShellFly = false;
-        
+        public int ShellsCount = 20;
+
         public void BuildCanvas()
         {
             for (int i = 0; i < 20; i++)
@@ -43,24 +41,39 @@ namespace Racing
             Console.Write("------------");
         }
 
-        public bool gameOver;
+        
+        public bool gameOver = false;
 
         public char[,] field = new char[12, 18];
         public void Backgroud()
         {
             Console.Clear();
             BuildCanvas();
-            int i = 0;
-            
+
+
             while (true)
             {
-                 field = new char[12, 18];
+                field = new char[12, 18];
 
                 _figures.DrowTo(field);
 
-                gameOver = _car.TestCollision(field,ref _shell.Shells);
-                if (gameOver)
-                    return;
+                var gameOverList = _car.TestCollision(field);
+                //получаем список символов с поля с которыми столкнулись и дальше решать
+                for (int i = 0; i < gameOverList.Count; i++)
+                {
+                    if (gameOverList[i].Symbol == '@')
+                    {
+                        gameOver = true;
+                        return;
+                    }
+                    else if (gameOverList[i].Symbol == '$')
+                    {
+                        ShellsCount++;
+                        gameOverList.RemoveAt(i);
+                    }
+                }
+                
+                
 
                 _car.RenderTo(field);
 
@@ -76,7 +89,7 @@ namespace Racing
                 // доводить ускорение до предела
                 // в отдельный класс
                 _figures.Fall();
-                
+
             };
         }
 
@@ -97,26 +110,20 @@ namespace Racing
             I += 10;
         }
 
-        public void Fire(char [,] field)
+        public void Fire(char[,] field)
         {
 
             for (int i = 0; i < 2; i++)
             {
-                _shell.FlyUp();
-                _shell.RenderTo(field);
+                _shellEvents.FlyUp();
+                _shellEvents.TestCollition(field, _figures.figuresList);
+
+                _shellEvents.DrowTo(field);
                 DrowFig(field);
                 System.Threading.Thread.Sleep(500 /*- I*/);
 
-                //к пуле тоже список 
             }
-            //for(int y = gameGround.GetLength(1)-1; y >0; y--)
-            //{
-            //    if(gameGround[X,y] == '@' )
-            //    {
-            //        gameGround[X, y+1] = '%';
-            //        break;
-            //    }
-            //}
+
             //в листе сделать проход по фигурам с поиском в какую попали 3
             // + у фигуры добавить метод проверки попадания и в нём-же можно менять фигуру 2
             //нарисовать полет 1

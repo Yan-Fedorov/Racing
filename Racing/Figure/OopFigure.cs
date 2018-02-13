@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Racing.Figure.Car;
 
 namespace Racing.Figure
 {
@@ -11,13 +7,13 @@ namespace Racing.Figure
     {
         public int X;
         public int Y;
-      
+
         public OopFigure()
         {
-           
+
         }
 
-        
+
         /*protected*/
         public char[,] figure = new char[,]
         {
@@ -70,13 +66,24 @@ namespace Racing.Figure
             {
                 f.figure = new char[,]
                {
-                   {'$'},  
+                   {'$'},
                };
             }
             return f;
         }
 
         public void RenderTo(char[,] gameGround)
+        {
+            Map(gameGround, (x, y, sym) =>
+            {
+                if (sym != ' ')
+                    gameGround[x, y] = sym;
+
+                return false;
+            });
+        }
+
+        protected void Map(char[,] gameGround, Func<int, int, char, bool> func)
         {
             var xLength = gameGround.GetLength(0);
             var yLength = gameGround.GetLength(1);
@@ -94,12 +101,12 @@ namespace Racing.Figure
                     int dextX = x + X;
                     int destY = y + Y;
 
-                    if (figure[x, y] == ' ' || dextX < 0 || destY < 0)
+                    if (dextX < 0 || destY < 0)
                         continue;
-                    
-                    gameGround[dextX, destY] = figure[x, y];
-                }
 
+                    if (func(dextX, destY, figure[x, y]))
+                        return ;
+                }
         }
 
         public static string ToString(char[,] mas)

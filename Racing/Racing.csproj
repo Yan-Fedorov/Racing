@@ -49,13 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Figure\CollidedFigures.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="Fall_Drow.cs" />
-    <Compile Include="Figure\Car\ShellEvents.cs" />
+    <Compile Include="ShellEvents.cs" />
     <Compile Include="IoCBuilder.cs" />
-    <Compile Include="Figure\Car\Car.cs" />
+    <Compile Include="Figure\Car.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="Figure\Car\Shell.cs" />
+    <Compile Include="Figure\Shell.cs" />
     <Compile Include="Figure\OopFigure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

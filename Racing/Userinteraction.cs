@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Racing.Figure.Car;
 using Racing.Figure;
 
 namespace Racing
@@ -13,16 +8,17 @@ namespace Racing
         private readonly OopCar _car;
         private readonly Logic _logic;
         private readonly Shell _shell;
+        private readonly ShellEvents _shellEvents;
 
         public ConsoleKeyInfo key_info = new ConsoleKeyInfo();
 
-        public Userinteraction(OopCar car, Logic logic, Shell shell)
+        public Userinteraction(OopCar car, Logic logic, ShellEvents shellEvents)
         {
             _car = car;
             _logic = logic;
-            _shell = shell;
+            _shellEvents = shellEvents;
         }
-        
+
         public void leftArrowEvent()
         {
             if (_car.X != 0)
@@ -40,12 +36,13 @@ namespace Racing
         }
         public void upArrowEvent()
         {
-            if (_shell.Shells > 0)
+            if (_logic.ShellsCount > 0)
             {
                 _logic.ShellFly = true;
-                _shell.Shells--;
+                _logic.ShellsCount--;
+                _shellEvents.shells.Add(new Shell { X = _car.X });
             }
-            
+
         }
         public void MoveCar()
         {
