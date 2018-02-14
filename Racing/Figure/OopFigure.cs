@@ -76,7 +76,8 @@ namespace Racing.Figure
         {
             Map(gameGround, (x, y, sym) =>
             {
-                if (sym != ' ')
+                
+                if (sym != ' ' )
                     gameGround[x, y] = sym;
 
                 return false;

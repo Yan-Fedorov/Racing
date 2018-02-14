@@ -39,6 +39,7 @@ namespace Racing
             }
             Console.SetCursorPosition(0, 19);
             Console.Write("------------");
+            
         }
 
         
@@ -70,6 +71,7 @@ namespace Racing
                     {
                         ShellsCount++;
                         gameOverList.RemoveAt(i);
+                     _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0,0] == '$'));
                     }
                 }
                 
@@ -84,7 +86,7 @@ namespace Racing
                 else
                 {
                     DrowFig(field);
-                    System.Threading.Thread.Sleep(1000 /*- I*/);
+                    System.Threading.Thread.Sleep(1000 - I);
                 }
                 // доводить ускорение до предела
                 // в отдельный класс
@@ -101,12 +103,15 @@ namespace Racing
                 for (int x = 0; x < 12; x++)
                 {
                     Console.Write(gameGround[x, y]);
-                }
+                }                
             }
+            Console.SetCursorPosition(20, 10);
+            Console.Write(ShellsCount);
         }
 
         public static void Increase(object obj)
         {
+            if(I <500)
             I += 10;
         }
 
@@ -116,14 +121,14 @@ namespace Racing
             for (int i = 0; i < 2; i++)
             {
                 _shellEvents.FlyUp();
+                
                 _shellEvents.TestCollition(field, _figures.figuresList);
 
                 _shellEvents.DrowTo(field);
                 DrowFig(field);
-                System.Threading.Thread.Sleep(500 /*- I*/);
+                System.Threading.Thread.Sleep(1500 - I/2);
 
             }
-
             //в листе сделать проход по фигурам с поиском в какую попали 3
             // + у фигуры добавить метод проверки попадания и в нём-же можно менять фигуру 2
             //нарисовать полет 1

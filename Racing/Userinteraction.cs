@@ -40,7 +40,7 @@ namespace Racing
             {
                 _logic.ShellFly = true;
                 _logic.ShellsCount--;
-                _shellEvents.shells.Add(new Shell { X = _car.X });
+                _shellEvents._shells.Add(new Shell { X = _car.X });
             }
 
         }

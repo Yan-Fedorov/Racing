@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Racing;
 
 namespace Racing.Figure
 {
@@ -8,14 +7,12 @@ namespace Racing.Figure
         
         public List<Collision> TestCollision(char[,] gameField)
         {
-            List<Collision> collidedFigures = new List<Collision>();
-            int i = 0;
-
+            List<Collision> collidedFigures = new List<Collision>();            
             Map(gameField, (x, y, sym) =>
             {                
                     if (
                         gameField[x, y] != ' ' && gameField[x, y] != '\0'
-                        && sym != ' ' && gameField[x, y] != '$'
+                        && sym != ' '
                         )
                     {
                     collidedFigures.Add(new Collision { X = x, Y = y, Symbol = gameField[x, y] });

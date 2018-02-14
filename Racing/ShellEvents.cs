@@ -8,7 +8,7 @@ namespace Racing
     {
         private readonly OopCar _car;
         private readonly CollidedFigures _collidedList;
-        public List<Shell> shells = new List<Shell>();
+        public List<Shell> _shells = new List<Shell>();
 
         public ShellEvents(OopCar car, CollidedFigures collidedList)
         {
@@ -18,31 +18,30 @@ namespace Racing
 
         public void FlyUp()
         {
-            for (int i = 0; i < shells.Count; i++)
+            
+            for (int i = 0; i < _shells.Count; i++)
             {
-                shells[i].Y--;
+                _shells[i].Y--;
             }
+            _shells = _shells.Where(x => x.Y > 0).ToList();
 
-            shells = shells.Where(x => x.Y > 0).ToList();
+
         }
 
         public void DrowTo(char[,] field)
         {
-            for (int i = 0; i < shells.Count; i++)
+            for (int i = 0; i < _shells.Count; i++)
             {
-                shells[i].RenderTo(field);
+                _shells[i].RenderTo(field);
 
             }
         }
 
         public void TestCollition(char[,] field, List<OopFigure> figures)
         {
-
-            //var collidedFigures = new List<List<Collision>>();
-
-            foreach (var shell in shells)
-            {
-                //collidedFigures.Add(shell.TestCollision(field));
+            var shellsToRemove = new List<Shell>();
+            foreach (var shell in _shells)
+            {                
                 var collision = shell.TestCollision(field).FirstOrDefault(x => x.Symbol == '@');
                 if (collision == null)
                     continue;
@@ -52,19 +51,12 @@ namespace Racing
                     continue;
 
 
-                for (int x = 0; x < figure.figure.GetLength(0); x++)
-                {
-                    for (int y = 0; y < figure.figure.GetLength(1); y++)
-                    {
-                        if (figure.X + x == collision.X && figure.Y + y == collision.Y
-                            && figure.figure[x, y] == '@')
-                        {
-                            figure.figure[x, y] = ' ';
-                        }
-
-                    }
-                }
+                if (ModifyFigure(figure, collision))
+                    shellsToRemove.Add(shell);
             }
+
+            if (shellsToRemove.Any())
+                _shells = _shells.Except(shellsToRemove).ToList();
         }
 
 
@@ -76,7 +68,26 @@ namespace Racing
             int downSide = figure.figure.GetLength(1) + figure.Y;
 
             return leftSide <= collision.X && collision.X <= rightSide &&
-                   upSide  <= collision.Y && collision.Y <= downSide;
+                   upSide <= collision.Y && collision.Y <= downSide;
+        }
+
+        private bool ModifyFigure(OopFigure figure, Collision collision)
+        {
+            for (int x = 0; x < figure.figure.GetLength(0); x++)
+            {
+                for (int y = 0; y < figure.figure.GetLength(1); y++)
+                {
+                    if (figure.X + x == collision.X && figure.Y + y == collision.Y
+                        && figure.figure[x, y] == '@')
+                    {
+                        figure.figure[x, y] = ' ';
+                        return true;
+                    }
+
+                }
+            }
+
+            return false;
         }
     }
 }
