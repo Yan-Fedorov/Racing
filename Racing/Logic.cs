@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using Racing.Figure;
+using System.Collections.Generic;
+using Racing.Additions;
 
 namespace Racing
 {
@@ -11,25 +13,31 @@ namespace Racing
         private readonly Fall_Drow _figures;
         private readonly Shell _shell;
         private readonly ShellEvents _shellEvents;
+        private readonly Scoreboard _scoreboard;
+        private readonly Armor _armor;
+        private readonly CarDecrease _carDecrease;
+        private readonly GameData _gameData;
+        private readonly GameDataService _gameDataService;
 
-        public Logic(OopCar car, Fall_Drow figures, Shell shell, ShellEvents shellEvents)
+        private readonly List<IAddition> _additions;
+
+        public Logic(OopCar car, Fall_Drow figures, Shell shell, ShellEvents shellEvents, Scoreboard scoreboard, Armor armor, CarDecrease carDecrease, GameData gameData, GameDataService gameDataService)
         {
             _car = car;
             _figures = figures;
             _shell = shell;
             _shellEvents = shellEvents;
+            _scoreboard = scoreboard;
+            _armor = armor;
+            _carDecrease = carDecrease;
+            _gameData = gameData;
+            _gameDataService = gameDataService;
         }
 
         public Thread backgroundGame;
-
-
-        static int I = 0;
-        static TimerCallback tm = new TimerCallback(Increase);
-        public Timer timer = new Timer(tm, null, 0, 3000);
-
+        
         public bool ShellFly = false;
-        public int ShellsCount = 20;
-
+        
         public void BuildCanvas()
         {
             for (int i = 0; i < 20; i++)
@@ -41,7 +49,6 @@ namespace Racing
             Console.Write("------------");
             
         }
-
         
         public bool gameOver = false;
 
@@ -50,49 +57,82 @@ namespace Racing
         {
             Console.Clear();
             BuildCanvas();
-
-
+            _scoreboard.DrowBoard();
             while (true)
             {
                 field = new char[12, 18];
 
                 _figures.DrowTo(field);
+                _shellEvents.TestCollition(field, _figures.figuresList);
 
                 var gameOverList = _car.TestCollision(field);
-                //получаем список символов с поля с которыми столкнулись и дальше решать
-                for (int i = 0; i < gameOverList.Count; i++)
+                ProcessingCollision(gameOverList);
+                if (gameOver)
                 {
-                    if (gameOverList[i].Symbol == '@')
-                    {
-                        gameOver = true;
-                        return;
-                    }
-                    else if (gameOverList[i].Symbol == '$')
-                    {
-                        ShellsCount++;
-                        gameOverList.RemoveAt(i);
-                     _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0,0] == '$'));
-                    }
+                    _gameDataService.Save(_gameData);
+                    return;
                 }
-                
-                
 
                 _car.RenderTo(field);
 
                 if (ShellFly)
-                {
+                {                    
                     Fire(field);
                 }
                 else
                 {
                     DrowFig(field);
-                    System.Threading.Thread.Sleep(1000 - I);
+                    System.Threading.Thread.Sleep(1000 - TimeService.I);
                 }
-                // доводить ускорение до предела
-                // в отдельный класс
                 _figures.Fall();
+                _gameData.PassesNumber++;
+                if((_gameData.PassesNumber - _carDecrease.PassNumber) % 30 == 0)
+                _carDecrease.ResizeCar();
+            };                        
+        }
+        private void ProcessingCollision(List<Collision> gameOverList)
+        {
+            for (int i = 0; i < gameOverList.Count; i++)
+            {
+                //_additions.
 
-            };
+                if (gameOverList[i].Symbol == '@')
+                {
+                    if (_armor.ArmorCount > 0)
+                    {
+                        _armor.ArmorCount--;
+                        var Collidedfigure = _figures.figuresList.FirstOrDefault(x => x.X <= gameOverList[i].X && gameOverList[i].X <= (x.figure.GetLength(0) + x.X) && x.Y <= gameOverList[i].Y && gameOverList[i].Y <= (x.figure.GetLength(1) + x.Y));
+                        _shellEvents.ModifyFigure(Collidedfigure, gameOverList[i]);
+                    }
+                    else
+                    {
+                        gameOver = true;
+                        return;
+                    }
+                }
+                else if (gameOverList[i].Symbol == '$')
+                {
+                    _shell.ShellsCount++;
+                    gameOverList.RemoveAt(i);
+                    _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0, 0] == '$'));
+                }
+                else if (gameOverList[i].Symbol == '^')
+                {
+                    _armor.ArmorCount++;
+                    gameOverList.RemoveAt(i);
+                    _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0, 0] == '^'));
+
+                }
+                else if (gameOverList[i].Symbol == 'D')
+                {
+                    _carDecrease.Dencrease++;
+                    _carDecrease.ResizeCar();
+                    _carDecrease.PassNumber = _gameData.PassesNumber;
+                    _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0, 0] == 'D'));
+                }
+
+                _scoreboard.DrowBoard();
+            }
         }
 
         public void DrowFig(char[,] gameGround)
@@ -105,16 +145,9 @@ namespace Racing
                     Console.Write(gameGround[x, y]);
                 }                
             }
-            Console.SetCursorPosition(20, 10);
-            Console.Write(ShellsCount);
         }
 
-        public static void Increase(object obj)
-        {
-            if(I <500)
-            I += 10;
-        }
-
+        
         public void Fire(char[,] field)
         {
 
@@ -126,17 +159,16 @@ namespace Racing
 
                 _shellEvents.DrowTo(field);
                 DrowFig(field);
-                System.Threading.Thread.Sleep(1500 - I/2);
+                if (i < 1)
+                {
+                    field = new char[12, 18];
+                    _figures.DrowTo(field);
+                }
+                _car.RenderTo(field);
+                System.Threading.Thread.Sleep(500 - TimeService.I / 2);
 
-            }
-            //в листе сделать проход по фигурам с поиском в какую попали 3
-            // + у фигуры добавить метод проверки попадания и в нём-же можно менять фигуру 2
-            //нарисовать полет 1
-            //при столкновении изменять фигуру
-            // список пуль
+            }           
         }
-
-
     }
 }
 

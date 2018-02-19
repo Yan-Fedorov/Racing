@@ -28,7 +28,7 @@ namespace Racing.Figure
         public static OopFigure buildFigure()
         {
             Random random = new Random();
-            int RandNum = random.Next(1, 5); ;
+            int RandNum = random.Next(1, 7);
 
             var f = new OopFigure
             {
@@ -67,6 +67,20 @@ namespace Racing.Figure
                 f.figure = new char[,]
                {
                    {'$'},
+               };
+            }
+            else if (RandNum == 5)
+            {
+                f.figure = new char[,]
+               {
+                   {'^'},
+               };
+            }
+            else if (RandNum == 6)
+            {
+                f.figure = new char[,]
+               {
+                   {'D'},
                };
             }
             return f;

@@ -71,7 +71,7 @@ namespace Racing
                    upSide <= collision.Y && collision.Y <= downSide;
         }
 
-        private bool ModifyFigure(OopFigure figure, Collision collision)
+        public bool ModifyFigure(OopFigure figure, Collision collision)
         {
             for (int x = 0; x < figure.figure.GetLength(0); x++)
             {
@@ -91,18 +91,3 @@ namespace Racing
         }
     }
 }
-
-// нужно где то проверить что пуля столкнулась с фигурой и после этого изменить фигуру в координатах столкновения + убрать пулю
-//          for (int i = 0; i<_collidedList.collidedFigures.Count(); i++)
-//            {
-//                for (int y = 0; y<figures[i].figure.GetLength(0); y++)
-//                {
-//                    for (int x = 0; x<figures[i].figure.GetLength(1); x++)
-//                    {
-//                        if (figures[i].X + x == XCol && figures[i].Y + y == YCol)
-//                        {
-//                            figures[i].figure[XCol - figures[i].X, YCol - figures[i].Y] = ' ';
-//                        }
-//}
-//                }
-//   

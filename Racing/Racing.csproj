@@ -35,6 +35,9 @@
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -49,9 +52,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\Armor.cs" />
+    <Compile Include="Additions\IAddition.cs" />
+    <Compile Include="CarDecrease.cs" />
     <Compile Include="Figure\CollidedFigures.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Fall_Drow.cs" />
+    <Compile Include="Additions\IInterfaceItem.cs" />
+    <Compile Include="GameData.cs" />
+    <Compile Include="GameDataService.cs" />
+    <Compile Include="Scoreboard.cs" />
     <Compile Include="ShellEvents.cs" />
     <Compile Include="IoCBuilder.cs" />
     <Compile Include="Figure\Car.cs" />
@@ -61,10 +71,14 @@
     <Compile Include="Figure\OopFigure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeService.cs" />
     <Compile Include="Userinteraction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="GameData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
