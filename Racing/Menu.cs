@@ -4,19 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Racing.Figure;
+using Autofac;
+using System.Threading;
 
 namespace Racing
 {
     class Menu
     {
-        private readonly Logic _logic;
-        private readonly GameDataService _gameData;
-        
+        //private readonly Logic _logic;
+        //private readonly GameDataService _gameData;
+        private readonly ILifetimeScope _scope;
 
-        public Menu(Logic logic, GameDataService gameData, Userinteraction userinteraction)
+
+        public Menu(/*Logic logic,*/ /*GameDataService gameData,*/ ILifetimeScope scope)
         {
-            _logic = logic;
-            _gameData = gameData;
+            //_logic = logic;
+            //_gameData = gameData;
+            _scope = scope;
             
         }
 
@@ -26,23 +30,24 @@ namespace Racing
         }
         public void StartMenu()
         {
-            do
+            while(true)
             {
                 Greating();
                 var answer = ConvertMenuOptions();
                 switch (answer)
                 {
                     case MenuOptions.StartGame:
-                        _logic.Backgroud();
-                        Console.ReadKey();
-                        _logic.FullStop = true;
+                        //_logic.Backgroud();
+                        //Console.ReadKey();
+                        //_logic.FullStop = true;
+                        StartGame();
                         break;
                     case MenuOptions.Exit:
                         Console.WriteLine("Мы будем рады видеть вас еще");
-                        _logic.FullStop = true;
+                        //_logic.FullStop = true;
                         return;
                     case MenuOptions.Stat:
-                        _gameData.DisplayStat();
+                        //_gameData.DisplayStat();
                         Console.WriteLine("Нажмите любую клавишу для выхода в основное меню");
                         Console.ReadKey();
                         break;
@@ -50,7 +55,7 @@ namespace Racing
                         throw new ArgumentException();
                 }
                 Console.Clear();
-            } while (!_logic.FullStop);
+            }/*while (!_logic.FullStop);*/
         }
 
         public MenuOptions ConvertMenuOptions()
@@ -68,5 +73,33 @@ namespace Racing
         {
             StartGame = 1, Exit, Stat
         }
+
+        private void StartGame()
+        {
+            //using (var container = IoCBuilder.Building())
+            //{
+                using (var gameScope = _scope.BeginLifetimeScope())
+                {
+                var logica = gameScope.Resolve<Logic>(/*out var a*/);
+                //var userInt = _scope.TryResolve<Userinteraction>(out var b);
+                //LogicScope(gameScope.Resolve<Logic>());
+                logica.backgroundGame = new Thread(logica.Backgroud);
+                logica.backgroundGame.Start();
+                logica.backgroundGame.IsBackground = true;
+
+                gameScope.Resolve<Userinteraction>().MoveCar();
+
+                
+
+                
+                    Console.ReadLine();
+                }
+            }
+        private void LogicScope(Logic logic)
+        {
+           
+
+        }
+        }
     }
-}
+

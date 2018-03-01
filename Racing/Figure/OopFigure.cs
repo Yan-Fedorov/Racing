@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Racing.Additions;
+using System;
 using System.Text;
 
 namespace Racing.Figure
 {
-    public class OopFigure
+    public class OopFigure: ConsoleMethods
     {
         public int X;
         public int Y;

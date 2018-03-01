@@ -8,10 +8,11 @@ namespace Racing
 {
     public class Scoreboard
     {
-        private readonly IEnumerable<IInterfaceItem> _ScoreList = new List<IInterfaceItem>();
-        public Scoreboard(IEnumerable<IInterfaceItem> items)
+        private readonly Lazy<IEnumerable<IInterfaceItem>> _ScoreList  /*new Lazy<List<IInterfaceItem>>()*/;
+        public Scoreboard(Lazy<IEnumerable<IInterfaceItem>> items)
         {
             _ScoreList = items;
+            
         }
 
         public void DrowBoard()
@@ -22,10 +23,13 @@ namespace Racing
             // в описании позиций учесть ограниченность длинны
 
             var offset = 10;
-            foreach (var score in _ScoreList)
+            foreach (var score in _ScoreList.Value)
             {
+                if (score == null)
+                    continue;
                 offset += score.GetUi(offset);
             }
+
         }
     }
 }

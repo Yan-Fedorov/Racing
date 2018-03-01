@@ -55,12 +55,15 @@
     <Compile Include="Additions\Armor.cs" />
     <Compile Include="Additions\IAddition.cs" />
     <Compile Include="CarDecrease.cs" />
+    <Compile Include="ConsoleMethods.cs" />
     <Compile Include="Figure\CollidedFigures.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Fall_Drow.cs" />
     <Compile Include="Additions\IInterfaceItem.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="GameDataService.cs" />
+    <Compile Include="ILogic.cs" />
+    <Compile Include="IUserInteraction.cs" />
     <Compile Include="Scoreboard.cs" />
     <Compile Include="ShellEvents.cs" />
     <Compile Include="IoCBuilder.cs" />

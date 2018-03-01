@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Racing
 {
-    public class GameData : IInterfaceItem
+    public class GameData : ConsoleMethods ,IInterfaceItem
     {
         public GameData()
         {
+            //PassesNumber = 0;
 
         }
         public int PassesNumber = 0;
@@ -17,9 +14,9 @@ namespace Racing
 
         public int GetUi(int offset)
         {
-            Console.SetCursorPosition(30, offset + 4);
+            Console.SetCursorPosition(30, offset);
             Console.Write($"Счёт - {PassesNumber}, ");
-            return 3;
+            return 2;
         }
     }
 }

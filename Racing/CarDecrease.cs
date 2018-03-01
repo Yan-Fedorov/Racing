@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Racing
 {
-    public class CarDecrease: IInterfaceItem, IAddition
+    public class CarDecrease: ConsoleMethods, IInterfaceItem, IAddition
     {
         private readonly OopCar _car;
         private readonly Fall_Drow _figures;
@@ -13,6 +13,9 @@ namespace Racing
         {
             _car = car;
             _figures = figures;
+            //Dencrease = 0;
+            //PassNumber = 0;
+            //refresh = true;
         }
         public int Dencrease = 0;
         public int PassNumber;
@@ -41,12 +44,23 @@ namespace Racing
                 Dencrease--;
             }
         }
-
+        private bool refresh = true;
         public int GetUi(int offset)
         {
-            Console.SetCursorPosition(30, offset + 6);
-            Console.Write($"Оставшееся время длительности уменьшения - {PassNumber}");
-            return 4;
+            
+            if (PassNumber == 0 && refresh)
+            {
+                ClearConData(offset);
+                refresh = false;
+                return 2;
+            }
+            else if (PassNumber > 0)
+            {
+                Console.SetCursorPosition(30, offset);
+                Console.Write($"Оставшееся время длительности уменьшения - {PassNumber}");
+                refresh = true;
+            }
+            return 2;
         }
 
         public bool TryApply(Collision collision)
@@ -57,7 +71,7 @@ namespace Racing
             Dencrease++;
            ResizeCar();
           PassNumber = 30;
-            _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0, 0] == 'D'));
+            _figures.RemoveBy(collision);
             return true;
         }
     }

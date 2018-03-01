@@ -44,13 +44,24 @@ namespace Racing
             }
         }
 
-        public void DisplayStat()
+        public void DisplayStat(string num = null)
         {
             var games = LoadDatas();
             games = SortAndRemove(games);
-            for (int i = 0; i < 10; i++)
+            var numb = Convert.ToInt32(num);
+            for (int i = 0; i < games.Count(); i++)
             {
-                Console.WriteLine(games[i].PassesNumber + games[i].NameOfGame);
+                if (i == numb)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("В игре под названием {0}, вы набрали {1}", games[i].NameOfGame, games[i].PassesNumber);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("В игре под названием {0}, вы набрали {1}", games[i].NameOfGame, games[i].PassesNumber);
+                }
             }
         }
 

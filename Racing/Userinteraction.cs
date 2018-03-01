@@ -3,7 +3,7 @@ using Racing.Figure;
 
 namespace Racing
 {
-    public class Userinteraction
+    public class Userinteraction/*:IUserInteraction*/
     {
         private readonly OopCar _car;
         private readonly Logic _logic;        
@@ -24,7 +24,8 @@ namespace Racing
         }
         public bool End = false;
 
-        public void leftArrowEvent()
+
+        private void leftArrowEvent()
         {
             if (_car.X != 0 && TimeService.AllowMovement == true)
             {                                   
@@ -32,7 +33,7 @@ namespace Racing
                     TimeService.AllowMovement = false;
             }
         }
-        public void rightArrowEvent()
+        private void rightArrowEvent()
         {
             if ((_car.X + _car.figure.GetLength(0)) != 12 && TimeService.AllowMovement == true)
             {                                   
@@ -40,28 +41,39 @@ namespace Racing
                     TimeService.AllowMovement = false;                
             }
         }
-        public void upArrowEvent()
+        private void upArrowEvent()
         {
             if (_shell.ShellsCount > 0 && TimeService.AllowFire == true)
             {
                 _logic.ShellFly = true;
                 _shell.ShellsCount--;
-                _scoreboard.DrowBoard();
+                
                 if (_car.figure.GetLength(0) > 1)
                     _shellEvents._shells.Add(new Shell(_figures) { X = _car.X + (_car.figure.GetLength(0) / 2) });
                 else _shellEvents._shells.Add(new Shell(_figures) { X = _car.X });
                 TimeService.AllowFire = false;
             }
         }
+        public void PEvent()
+        {
+            _logic.Pause = !_logic.Pause;
+        }
+
         public void MoveCar()
         {
-            while (!(_logic.gameOver/* && End*/))
+            while (!(_logic.gameOver))
             {
                 key_info = Console.ReadKey(true);
-                if (key_info.Key == ConsoleKey.RightArrow) rightArrowEvent();
-                else if (key_info.Key == ConsoleKey.LeftArrow) leftArrowEvent();
-                else if (key_info.Key == ConsoleKey.UpArrow) upArrowEvent();
+                if (key_info.Key == ConsoleKey.RightArrow && !_logic.Pause) rightArrowEvent();
+                else if (key_info.Key == ConsoleKey.LeftArrow && !_logic.Pause) leftArrowEvent();
+                else if (key_info.Key == ConsoleKey.UpArrow && !_logic.Pause) upArrowEvent();
+                else if (key_info.Key == ConsoleKey.P) PEvent();
             }
         }
     }
 }
+
+//KeyEventArgs e)
+//{
+//    if (e.KeyCode == Keys.Q)
+//        button1.PerformClick();

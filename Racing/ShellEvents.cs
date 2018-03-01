@@ -9,11 +9,13 @@ namespace Racing
         private readonly OopCar _car;
         private readonly CollidedFigures _collidedList;
         public List<Shell> _shells = new List<Shell>();
+        private readonly Fall_Drow _fall;
 
-        public ShellEvents(OopCar car, CollidedFigures collidedList)
+        public ShellEvents(OopCar car, CollidedFigures collidedList, Fall_Drow fall)
         {
             _car = car;
             _collidedList = collidedList;
+            _fall = fall;
         }
 
         public void FlyUp()
@@ -37,7 +39,7 @@ namespace Racing
             }
         }
 
-        public void TestCollition(char[,] field, List<OopFigure> figures)
+        public void TestCollition(char[,] field)
         {
             var shellsToRemove = new List<Shell>();
             foreach (var shell in _shells)
@@ -46,12 +48,12 @@ namespace Racing
                 if (collision == null)
                     continue;
 
-                var figure = figures.FirstOrDefault(x => IsOverlaped(x, collision));
-                if (figure == null)
-                    continue;
+                //var figure = _fall.IsOverlaped(collision);
+                //if (figure == null)
+                //    continue;
 
 
-                if (ModifyFigure(figure, collision))
+                if (_fall.ModifyFigure( collision))
                     shellsToRemove.Add(shell);
             }
 
@@ -60,34 +62,6 @@ namespace Racing
         }
 
 
-        private bool IsOverlaped(OopFigure figure, Collision collision)
-        {
-            int leftSide = figure.X;
-            int rightSide = figure.figure.GetLength(0) + figure.X;
-            int upSide = figure.Y;
-            int downSide = figure.figure.GetLength(1) + figure.Y;
-
-            return leftSide <= collision.X && collision.X <= rightSide &&
-                   upSide <= collision.Y && collision.Y <= downSide;
-        }
-
-        public bool ModifyFigure(OopFigure figure, Collision collision)
-        {
-            for (int x = 0; x < figure.figure.GetLength(0); x++)
-            {
-                for (int y = 0; y < figure.figure.GetLength(1); y++)
-                {
-                    if (figure.X + x == collision.X && figure.Y + y == collision.Y
-                        && figure.figure[x, y] == '@')
-                    {
-                        figure.figure[x, y] = ' ';
-                        return true;
-                    }
-
-                }
-            }
-
-            return false;
-        }
+        
     }
 }

@@ -16,6 +16,8 @@ namespace Racing.Figure
             {
                 {'Ы'}
             };
+
+            //ShellsCount = 20;
         }
 
         public int ShellsCount = 20;
@@ -24,18 +26,29 @@ namespace Racing.Figure
         {
             return Convert.ToString(ShellsCount);
         }
-
+        private bool refresh = true;
         public int GetUi(int offset)
-        {            
-            Console.SetCursorPosition(30, offset);
-            Console.Write($"Количество снарядов - {ShellsCount}, ");
+        {
+            
+            if (ShellsCount == 0 && refresh)
+            {
+                ClearConData(offset);
+                refresh = false;
+                return 4;
+            }
+            else if(ShellsCount >0)
+            {
+                Console.SetCursorPosition(30, offset);
+                Console.Write($"Количество снарядов - {ShellsCount}, ");
 
-            Console.SetCursorPosition(30, offset + 1);
-            Console.Write("с их помощью вы можете разрушать преграды,");
+                Console.SetCursorPosition(30, offset + 1);
+                Console.Write("с их помощью вы можете разрушать преграды,");
 
-            Console.SetCursorPosition(30, offset + 2);
-            Console.Write("для увеличения количества вам необходимо их ловить(врезайтесь в $)");
-            return 1;
+                Console.SetCursorPosition(30, offset + 2);
+                Console.Write("для увеличения количества вам необходимо их ловить(врезайтесь в $)");
+                refresh = true;
+            }
+            return 4;
         }
 
         public bool TryApply(Collision collision)
@@ -44,7 +57,7 @@ namespace Racing.Figure
                 return false;
 
             ShellsCount++;
-            _figures.figuresList.Remove(_figures.figuresList.FirstOrDefault(x => x.figure[0, 0] == '$'));
+            _figures.RemoveBy(collision);
 
             return true;
         }

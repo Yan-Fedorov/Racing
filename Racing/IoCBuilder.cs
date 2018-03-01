@@ -14,9 +14,9 @@ namespace Racing
             builder.RegisterType<OopFigure>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CollidedFigures>().AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<Userinteraction>().AsSelf().SingleInstance();
+            builder.RegisterType<Userinteraction>().AsSelf()/*.As<IUserInteraction>()*/.InstancePerLifetimeScope();
 
-            builder.RegisterType<Logic>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<Logic>().AsSelf()/*.As<ILogic>()*/.InstancePerLifetimeScope();
 
             builder.RegisterType<Menu>().AsSelf().SingleInstance();
 
