@@ -21,11 +21,16 @@ namespace Racing
         public int PassNumber;
         public void ResizeCar()
         {
+            var x = _car.X;
             if (Dencrease<=0)
             {
                 if(_car.X > 9)
                 {
                     _car.X = 9;
+                }
+                if (_car.figure.GetLength(0) == 1)
+                {
+                    _car.X = x - 1;
                 }
                 _car.figure = new[,]
             {               
@@ -37,10 +42,16 @@ namespace Racing
             }
             else if(Dencrease > 0)
             {
+                if(_car.figure.GetLength(0)> 1)
+                {
+                    _car.X = x + 1;
+                }
                 _car.figure = new[,]
             {
                 {'^'},                               
             };
+                
+                
                 Dencrease--;
             }
         }

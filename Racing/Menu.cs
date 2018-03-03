@@ -21,7 +21,7 @@ namespace Racing
             //_logic = logic;
             //_gameData = gameData;
             _scope = scope;
-            
+
         }
 
         public static void Greating()
@@ -30,7 +30,7 @@ namespace Racing
         }
         public void StartMenu()
         {
-            while(true)
+            while (true)
             {
                 Greating();
                 var answer = ConvertMenuOptions();
@@ -78,8 +78,8 @@ namespace Racing
         {
             //using (var container = IoCBuilder.Building())
             //{
-                using (var gameScope = _scope.BeginLifetimeScope())
-                {
+            using (var gameScope = _scope.BeginLifetimeScope())
+            {
                 var logica = gameScope.Resolve<Logic>(/*out var a*/);
                 //var userInt = _scope.TryResolve<Userinteraction>(out var b);
                 //LogicScope(gameScope.Resolve<Logic>());
@@ -89,17 +89,17 @@ namespace Racing
 
                 gameScope.Resolve<Userinteraction>().MoveCar();
 
-                
 
-                
-                    Console.ReadLine();
-                }
+
+
+                Console.ReadLine();
             }
+        }
         private void LogicScope(Logic logic)
         {
-           
+
 
         }
-        }
     }
+}
 

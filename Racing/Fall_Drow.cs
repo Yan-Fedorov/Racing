@@ -62,44 +62,22 @@ namespace Racing
                    upSide <= collision.Y && collision.Y <= downSide;
         }
 
-        private OopFigure IsOverlaped(Collision collision)
+        public bool ModifyFigure(Collision collision)
         {
-            int leftSide;
-            int rightSide;
-            int upSide;
-            int downSide;
-            OopFigure fig = new OopFigure();
-            foreach (var figure in figuresList)
-            {
-                leftSide = figure.X;
-                rightSide = figure.figure.GetLength(0) + figure.X;
-                upSide = figure.Y;
-                downSide = figure.figure.GetLength(1) + figure.Y;
-                if (leftSide <= collision.X && collision.X <= rightSide &&
-                       upSide <= collision.Y && collision.Y <= downSide)
-                {
-                    fig = figure;
-                    break;
-                }
-            }
-            return fig;
-        }
-
-
-        public bool ModifyFigure( Collision collision)
-        {
-            var figure = IsOverlaped(collision);
+            var figure = figuresList.FirstOrDefault(f => IsOverlaped(f, collision));
+            if (figure == null)
+                return false;
             //for (int x = 0; x < figure.figure.GetLength(0); x++)
             //{
             //    for (int y = 0; y < figure.figure.GetLength(1); y++)
             //    {
             int x = collision.X - figure.X,
                 y = collision.Y - figure.Y;
-                    if (figure.figure[x, y] == '@')
-                    {
-                        figure.figure[x, y] = ' ';
-                        return true;
-                    }
+            if (figure.figure[x, y] == '@')
+            {
+                figure.figure[x, y] = ' ';
+                return true;
+            }
             //    }
             //}
 

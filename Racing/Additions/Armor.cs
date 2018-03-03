@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Linq;
 
 namespace Racing.Additions
@@ -24,7 +24,7 @@ namespace Racing.Additions
         private bool refresh = true;
         public int GetUi(int offset)
         {
-            
+
             if (ArmorCount == 0 && refresh)
             {
                 ClearConData(offset);
@@ -34,13 +34,13 @@ namespace Racing.Additions
             else if (ArmorCount > 0)
             {
                 Console.SetCursorPosition(30, offset);
-                Console.Write($"ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ñ… ÑÑ‚Ð¾Ð»ÐºÐ½Ð¾Ð²ÐµÐ½Ð¸Ð¹ Ñ Ð¿Ñ€ÐµÐ³Ñ€Ð°Ð´Ð°Ð¼Ð¸ - {ArmorCount}, ");
+                Console.Write($"Êîëè÷åñòâî äîñòóïíûõ ñòîëêíîâåíèé ñ ïðåãðàäàìè - {ArmorCount}, ");
 
                 Console.SetCursorPosition(30, offset + 1);
-                Console.Write("Ñ Ð¸Ñ… Ð¿Ð¾Ð¼Ð¾Ñ‰ÑŒÑŽ Ð²Ñ‹ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ñ€Ð°Ð·Ñ€ÑƒÑˆÐ°Ñ‚ÑŒ Ð¿Ñ€ÐµÐ³Ñ€Ð°Ð´Ñ‹,");
+                Console.Write("ñ èõ ïîìîùüþ âû ìîæåòå ðàçðóøàòü ïðåãðàäû,");
 
                 Console.SetCursorPosition(30, offset + 2);
-                Console.Write("Ð´Ð»Ñ ÑƒÐ²ÐµÐ»Ð¸Ñ‡ÐµÐ½Ð¸Ñ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð° Ð²Ð°Ð¼ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð¸Ñ… Ð»Ð¾Ð²Ð¸Ñ‚ÑŒ(Ð²Ñ€ÐµÐ·Ð°Ð¹Ñ‚ÐµÑÑŒ Ð² ^)");
+                Console.Write("äëÿ óâåëè÷åíèÿ êîëè÷åñòâà âàì íåîáõîäèìî èõ ëîâèòü(âðåçàéòåñü â ^)");
                 refresh = true;
             }
 
@@ -49,13 +49,14 @@ namespace Racing.Additions
 
         public bool TryApply(Collision collision)
         {
-            if (collision.Symbol == '@'){
+            if (collision.Symbol == '@')
+            {
                 if (ArmorCount > 0)
                 {
                     ArmorCount--;
-                    
-                    
-                    _fall.ModifyFigure( collision);
+
+
+                    _fall.ModifyFigure(collision);
                     return true;
                 }
                 else
