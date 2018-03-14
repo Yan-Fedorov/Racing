@@ -22,7 +22,9 @@ namespace Racing
 
             builder.RegisterType<Fall_Drow>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ShellEvents>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<TimeService>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<TimeService>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<Shell>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();
             builder.RegisterType<Additions.Armor>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();

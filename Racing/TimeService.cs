@@ -1,10 +1,14 @@
-﻿using Racing.Figure;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace Racing
 {
-    public class TimeService: IDisposable
+    public interface ITimeService
+    {
+        int GetTimeout(bool makeHalh = false);
+    }
+
+    public class TimeService: ITimeService, IDisposable
     {
         //private readonly CarDecrease _carDecrease;
         //private readonly OopCar _car;
@@ -47,6 +51,13 @@ namespace Racing
         public void Dispose()
         {
             ButtonFireTimer.Dispose();
+        }
+
+        public int GetTimeout(bool makeHalh = false)
+        {
+            return makeHalh
+                ? 500 - I / 2
+                : 1000 - I;
         }
     }
 }
