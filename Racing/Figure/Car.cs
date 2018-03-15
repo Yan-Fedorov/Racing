@@ -1,6 +1,14 @@
-﻿namespace Racing.Figure
+﻿using System.Collections.Generic;
+
+namespace Racing.Figure
 {
-    public class OopCar : CollidedFigures
+    public interface IOopCar
+    {
+        List<Collision> TestCollision(char[,] gameField);
+        void RenderTo(char[,] gameGround);
+    }
+
+    public class OopCar : CollidedFigures, IOopCar
     {
         public OopCar()
         {
@@ -17,7 +25,7 @@
                 //{'^','^','^','^'},
                 //{' ',' ','^',' '},
                 //{' ',' ','^',' '},
-            };                       
+            };
         }
     }
 }

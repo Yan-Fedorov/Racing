@@ -1,11 +1,16 @@
 ﻿using Racing.Additions;
 using Racing.Figure;
 using System;
-using System.Linq;
 
 namespace Racing
 {
-    public class CarDecrease: ConsoleMethods, IInterfaceItem, IAddition
+    public interface ICarDecrease
+    {
+        int PassNumber { get; set; }
+        void ResizeCar();
+    }
+
+    public class CarDecrease: ConsoleMethods, ICarDecrease, IInterfaceItem, IAddition
     {
         private readonly OopCar _car;
         private readonly Fall_Drow _figures;
@@ -18,7 +23,7 @@ namespace Racing
             //refresh = true;
         }
         public int Dencrease = 0;
-        public int PassNumber;
+        public int PassNumber { get; set; }
         public void ResizeCar()
         {
             var x = _car.X;

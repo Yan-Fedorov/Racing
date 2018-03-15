@@ -4,11 +4,20 @@ using System.Linq;
 
 namespace Racing
 {
-    public class ShellEvents
+    public interface IShellEvents
+    {
+        List<Shell> _shells { get; set; }
+        void TestCollition(char[,] field);
+        void FlyUp();
+        void DrowTo(char[,] field);
+        bool HasShell();
+    }
+
+    public class ShellEvents : IShellEvents
     {
         private readonly OopCar _car;
         private readonly CollidedFigures _collidedList;
-        public List<Shell> _shells = new List<Shell>();
+        public List<Shell> _shells { get; set; } = new List<Shell>();
         private readonly Fall_Drow _fall;
 
         public ShellEvents(OopCar car, CollidedFigures collidedList, Fall_Drow fall)
@@ -20,7 +29,7 @@ namespace Racing
 
         public void FlyUp()
         {
-            
+
             for (int i = 0; i < _shells.Count; i++)
             {
                 _shells[i].Y--;
@@ -39,11 +48,16 @@ namespace Racing
             }
         }
 
+        public bool HasShell()
+        {
+            return _shells.Count != 0;
+        }
+
         public void TestCollition(char[,] field)
         {
             var shellsToRemove = new List<Shell>();
             foreach (var shell in _shells)
-            {                
+            {
                 var collision = shell.TestCollision(field).FirstOrDefault(x => x.Symbol == '@');
                 if (collision == null)
                     continue;
@@ -53,7 +67,7 @@ namespace Racing
                 //    continue;
 
 
-                if (_fall.ModifyFigure( collision))
+                if (_fall.ModifyFigure(collision))
                     shellsToRemove.Add(shell);
             }
 
@@ -62,6 +76,6 @@ namespace Racing
         }
 
 
-        
+
     }
 }

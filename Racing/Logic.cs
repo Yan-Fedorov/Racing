@@ -9,19 +9,19 @@ namespace Racing
 {
     public class Logic/*: ILogic*/
     {
-        private readonly OopCar _car;
-        private readonly Fall_Drow _figures;
-        private readonly ShellEvents _shellEvents;
-        private readonly Scoreboard _scoreboard;
-        private readonly CarDecrease _carDecrease;
+        private readonly IOopCar _car;
+        private readonly IFall_Drow _figures;
+        private readonly IShellEvents _shellEvents;
+        private readonly IScoreboard _scoreboard;
+        private readonly ICarDecrease _carDecrease;
         private readonly GameData _gameData;
-        private readonly GameDataService _gameDataService;
+        private readonly IGameDataService _gameDataService;
         private readonly ITimeService _timeService;
+        private readonly IConsole _console;
 
         private readonly Lazy<IEnumerable<IAddition>> _additions;
 
-        public Logic(OopCar car, Fall_Drow figures, ShellEvents shellEvents, Scoreboard scoreboard, CarDecrease carDecrease,
-            GameData gameData, GameDataService gameDataService, Lazy<IEnumerable<IAddition>> items, ITimeService timeService)
+        public Logic(IOopCar car, IFall_Drow figures, IShellEvents shellEvents, IScoreboard scoreboard, ICarDecrease carDecrease, GameData gameData, IGameDataService gameDataService, Lazy<IEnumerable<IAddition>> items, ITimeService timeService, IConsole console)
         {
             _car = car;
             _figures = figures;
@@ -32,6 +32,7 @@ namespace Racing
             _gameDataService = gameDataService;
             _additions = items;
             _timeService = timeService;
+            _console = console;
         }
 
         public bool FullStop = false;
@@ -40,17 +41,6 @@ namespace Racing
 
         public bool ShellFly = false;
 
-        public void BuildCanvas()
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                Console.SetCursorPosition(12, i);
-                Console.WriteLine('|');
-            }
-            Console.SetCursorPosition(0, 19);
-            Console.Write("------------");
-
-        }
 
         public bool gameOver = false;
 
@@ -58,8 +48,8 @@ namespace Racing
 
         public void Backgroud()
         {
-            Console.Clear();
-            BuildCanvas();
+            _console.Clear();
+            _console.BuildCanvas();
             _scoreboard.DrowBoard();
 
             var cycleMode = CycleMode.NoShells;
@@ -81,9 +71,7 @@ namespace Racing
                     {
                         if (gamesList[i].PassesNumber < _gameData.PassesNumber)
                         {
-                            Console.Clear();
-                            Console.WriteLine("Введите название игры");
-                            _gameData.NameOfGame = Console.ReadLine();
+                            _gameData.NameOfGame = _console.GetGameName();
                             _gameDataService.Save(_gameData);
                             var numb = Convert.ToString(i);
                             _gameDataService.DisplayStat(numb);
@@ -97,7 +85,7 @@ namespace Racing
                 _car.RenderTo(field);
 
 
-                var isShellsFlyUp = _shellEvents._shells.Count != 0;
+                var isShellsFlyUp = _shellEvents.HasShell();
                 if (isShellsFlyUp)
                 {
                     if (cycleMode != CycleMode.Part1)
@@ -109,7 +97,7 @@ namespace Racing
                 }
 
 
-                DrowFig(field);
+                _console.DrowFig(field);
 
                 cycleMode = GetNextMode(cycleMode, isShellsFlyUp);
                 Thread.Sleep(_timeService.GetTimeout(cycleMode != CycleMode.NoShells));
@@ -147,17 +135,6 @@ namespace Racing
         }
 
 
-        public void DrowFig(char[,] gameGround)
-        {
-            for (int y = 0; y < 18; y++)
-            {
-                Console.SetCursorPosition(0, y);
-                for (int x = 0; x < 12; x++)
-                {
-                    Console.Write(gameGround[x, y]);
-                }
-            }
-        }
 
         private enum CycleMode
         {
@@ -192,6 +169,53 @@ namespace Racing
 
                 default:
                     throw new Exception($"Unnoun mode {currentMode}");
+            }
+        }
+    }
+
+
+    public interface IConsole
+    {
+        void Clear();
+        void BuildCanvas();
+        string GetGameName();
+        void DrowFig(char[,] gameGround);
+    }
+
+    public class GameConsole : IConsole
+    {
+        public void Clear()
+        {
+            Console.Clear();
+        }
+
+        public void BuildCanvas()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                Console.SetCursorPosition(12, i);
+                Console.WriteLine('|');
+            }
+            Console.SetCursorPosition(0, 19);
+            Console.Write("------------");
+        }
+
+        public string GetGameName()
+        {
+            Console.Clear();
+            Console.WriteLine("Введите название игры");
+            return Console.ReadLine();
+        }
+
+        public void DrowFig(char[,] gameGround)
+        {
+            for (int y = 0; y < 18; y++)
+            {
+                Console.SetCursorPosition(0, y);
+                for (int x = 0; x < 12; x++)
+                {
+                    Console.Write(gameGround[x, y]);
+                }
             }
         }
     }

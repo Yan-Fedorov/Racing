@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Racing
 {
-    public class Scoreboard
+    public interface IScoreboard
+    {
+        void DrowBoard();
+    }
+
+    public class Scoreboard: IScoreboard
     {
         private readonly Lazy<IEnumerable<IInterfaceItem>> _ScoreList  /*new Lazy<List<IInterfaceItem>>()*/;
         public Scoreboard(Lazy<IEnumerable<IInterfaceItem>> items)

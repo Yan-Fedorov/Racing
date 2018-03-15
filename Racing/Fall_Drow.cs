@@ -4,7 +4,16 @@ using Racing.Figure;
 
 namespace Racing
 {
-    public class Fall_Drow
+    public interface IFall_Drow
+    {
+        void Fall();
+        void DrowTo(char[,] field);
+        void RemoveBy(Collision collision);
+        bool ModifyFigure(Collision collision);
+    }
+
+
+    public class Fall_Drow: IFall_Drow
     {
         public Fall_Drow()
         {

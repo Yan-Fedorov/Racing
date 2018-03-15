@@ -10,7 +10,9 @@ namespace Racing
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<OopCar>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<OopCar>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
             builder.RegisterType<OopFigure>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CollidedFigures>().AsSelf().InstancePerLifetimeScope();
 
@@ -20,8 +22,12 @@ namespace Racing
 
             builder.RegisterType<Menu>().AsSelf().SingleInstance();
 
-            builder.RegisterType<Fall_Drow>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<ShellEvents>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<Fall_Drow>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<ShellEvents>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
             builder.RegisterType<TimeService>()
                 .AsSelf().AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
@@ -29,11 +35,19 @@ namespace Racing
             builder.RegisterType<Shell>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();
             builder.RegisterType<Additions.Armor>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();
 
-            builder.RegisterType<Scoreboard>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<CarDecrease>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();
+            builder.RegisterType<Scoreboard>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CarDecrease>()
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope().AsImplementedInterfaces();
 
             builder.RegisterType<GameData>().AsSelf().InstancePerLifetimeScope().AsImplementedInterfaces();
-            builder.RegisterType<GameDataService>().AsSelf().SingleInstance();
+            builder.RegisterType<GameDataService>()
+                .AsSelf().AsImplementedInterfaces()
+                .SingleInstance();
+
+            builder.RegisterType<GameConsole>().AsImplementedInterfaces().SingleInstance();
 
             return builder.Build();
         }

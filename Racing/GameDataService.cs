@@ -7,7 +7,14 @@ using System.Linq;
 
 namespace Racing
 {
-    public class GameDataService
+    public interface IGameDataService
+    {
+        List<GameData> LoadDatas();
+        void Save(GameData gameData);
+        void DisplayStat(string num = null);
+    }
+
+    public class GameDataService: IGameDataService
     {
         private readonly string _path;
 
